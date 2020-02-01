@@ -29,7 +29,7 @@ async function fetchClipLibrary() {
   if (!user) {
     return false;
 	}
-  const clips = await twitchClient.helix.clips.getClipsForBroadcaster(user.id, {endDate: endDateValue ?  moment(endDateValue).format() : endDateValue,  startDate: startDateValue ? moment(startDateValue).format() : startDateValue, limit: "5"});
+  const clips = await twitchClient.helix.clips.getClipsForBroadcaster(user.id, {endDate: endDateValue ?  moment(endDateValue).format() : undefined,  startDate: startDateValue ? moment(startDateValue).format() : undefined, limit: "5"});
 	return clips;
 }
  
@@ -43,14 +43,13 @@ return (
   <button
   className={'button'}
   onClick={()=>{
-    console.log(startDateValue);
     console.log('coming soon chat, relax');
     isStreamLive().then(data=> setLiveStatusValue(data.toString()));
     fetchClipLibrary().then(data=> { console.log(data.data); setListOfClips(data.data)});
   }
 } 
   >search</button>
-  {!!listOfClips.length && listOfClips.map(clip => <div key={clip.id}>{clip.url}
+  {!!listOfClips.length && listOfClips.filter(clip => clip).map(clip => <div key={clip.id}>{clip.url}
     <iframe
                                 src={clip.embedUrl}
                                 height="600px"
