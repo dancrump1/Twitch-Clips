@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import TwitchClient from 'twitch';
 import moment from 'moment';
-import './App.css';
+import twitchGif from './images/twitch_logo_animation.gif'
+import online from './images/online.png'
+import offline from './images/offline.png'
+import greyCircle from './images/greyCircle.png'
+import './App.scss';
 
 function App() {
   const clientId = '21w5wlsrs2z97lckvfraznvflm33m3';
@@ -10,6 +14,7 @@ function App() {
 
   const [streamerValue, setStreamerValue] = useState("");
   const [gameValue, setGameValue] = useState("");
+  const [streamerNameDisplay, setstreamerNameDisplay] = useState("");
   const [liveStatusValue, setLiveStatusValue] = useState("No probably idk search for someone you nitwit");
   const [startDateValue, setStartDateValue] = useState("");
   const [endDateValue, setEndDateValue] = useState("");
@@ -40,18 +45,19 @@ function App() {
 
 
   return (
-    <div className={ 'searchContainer' }>
-      <input type='text' value={ streamerValue } onChange={ event => {setStreamerValue(event.target.value); setLiveStatusValue('No probably idk search for someone you nitwit') }} placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
+    <div className='searchContainer' >
+      <div>
+      <input type='text' value={ streamerValue } onChange={ event => {setStreamerValue(event.target.value); setstreamerNameDisplay(''); setLiveStatusValue('No probably idk search for someone you nitwit') }} placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
       <input type='date' onChange={ event => setStartDateValue(event.target.value) } className='startDate' />
       <input type='date' onChange={ event => setEndDateValue(event.target.value) } className='endDate' />
       <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" className='gameInput' />
       <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" className='createdByInput' />
-      <div className="areTheyLive"><strong>Are they live: </strong> { liveStatusValue === 'No probably idk search for someone you nitwit' ? 'No probably idk search for someone you nitwit' : liveStatusValue === 'true' ? 'Yas' : 'No bitch' }</div>
       <button
         className={ 'button' }
         onClick={ () => {
           console.log('coming soon chat, relax');
-          isStreamLive().then(data => setLiveStatusValue(data.toString()));
+          setstreamerNameDisplay(streamerValue);
+          isStreamLive().then(data => setLiveStatusValue(data));
           fetchGameId().then(gameId => {
             fetchClipLibrary().then(data => {
               const filteredClips = data?.data?.filter(clip => {
@@ -70,7 +76,13 @@ function App() {
             });
           })
         } }
-      >search</button>
+        >search</button>
+        </div>
+        <div className="nameAndStatusContainer">
+
+        <h1>{streamerNameDisplay || 'Search for a streamer plez'}</h1>
+        <img className="liveStatus" src={streamerNameDisplay ? (liveStatusValue ? online : offline) : greyCircle } alt="liveStatus" />
+        </div>
       <div className='iframeGrid'>
         { !!listOfClips?.length && listOfClips.map(clip =>
           <div className="iframeContainer" key={ clip.id }>
@@ -86,7 +98,14 @@ function App() {
             />
           </div>
         ) }
-        {!listOfClips?.length && <h1 className='searchMessage'>Search for a Streamer's clips</h1>}
+        {!listOfClips?.length && 
+        <>
+        <h1 className='searchMessage'>
+          Search for a Streamer's clips
+        </h1>
+        <img src={twitchGif} alt="twitch" className='twitchGif' />
+        </>
+        }
       </div>
     </div>
   );
