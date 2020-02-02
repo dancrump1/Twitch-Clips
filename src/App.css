@@ -1,3 +1,51 @@
+.searchContainer{}
+
+.streamerNameInput{
+    margin: 15px;
+
+}
+
+.startDate{
+    margin-right: 15px;
+}
+
+.endDate{
+
+    margin-right: 15px;
+}
+
+.gameInput{
+margin-right: 15px;
+
+}
+
+.createdByInput{
+    
+    margin-right: 15px;
+}
+
+.areTheyLive {
+    padding: 0 0 15px 15px;
+}
+
+
 .button {
 margin-left: 15px;
+}
+
+.iframeGrid{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.iframeContainer{ 
+    min-width: 445px;
+display: flex;
+flex-shrink: 0;
+flex-direction: column;
+padding: 15px;
+}
+
+.iframe{
+height: 200px;
 }

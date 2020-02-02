@@ -41,12 +41,12 @@ function App() {
 
   return (
     <div className={ 'searchContainer' }>
-      <input type='text' value={ streamerValue } onChange={ event => setStreamerValue(event.target.value) } placeholder="Type here to search for a streamer's clips" />
-      <input type='date' onChange={ event => setStartDateValue(event.target.value) } />
-      <input type='date' onChange={ event => setEndDateValue(event.target.value) } />
-      <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" />
-      <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" />
-      <div><strong>Are they live: </strong> { liveStatusValue }</div>
+      <input type='text' value={ streamerValue } onChange={ event => setStreamerValue(event.target.value) } placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
+      <input type='date' onChange={ event => setStartDateValue(event.target.value) } className='startDate' />
+      <input type='date' onChange={ event => setEndDateValue(event.target.value) } className='endDate' />
+      <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" className='gameInput' />
+      <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" className='createdByInput' />
+      <div className="areTheyLive"><strong>Are they live: </strong> { liveStatusValue }</div>
       <button
         className={ 'button' }
         onClick={ () => {
@@ -60,7 +60,7 @@ function App() {
                 } else if (!createdByValue && gameId) {
                   return clip.gameId.toString() === gameId.id.toString();
                 } else if (!gameId && createdByValue) {
-                 return clip.creatorDisplayName === createdByValue;
+                  return clip.creatorDisplayName === createdByValue;
                 } else {
                   return clip;
                 }
@@ -71,17 +71,22 @@ function App() {
           })
         } }
       >search</button>
-      { !!listOfClips.length && listOfClips.map(clip => <div key={ clip.id }>{ clip.title }
-        <iframe
-          src={ clip.embedUrl }
-          height="600px"
-          width="100%"
-          frameBorder="<frameborder>"
-          scrolling="<scrolling>"
-          title="Iframe1">
-
-        </iframe>
-      </div>) }
+      <div className='iframeGrid'>
+        { !!listOfClips.length && listOfClips.map(clip =>
+          <div className="iframeContainer" key={ clip.id }>
+            { clip.title }
+            <iframe
+              src={ clip.embedUrl }
+              height="600px"
+              width="100%"
+              frameBorder="<frameborder>"
+              scrolling="<scrolling>"
+              title="Iframe1"
+              className='iframe'
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
