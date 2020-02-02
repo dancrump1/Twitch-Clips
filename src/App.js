@@ -46,7 +46,7 @@ function App() {
       <input type='date' onChange={ event => setEndDateValue(event.target.value) } className='endDate' />
       <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" className='gameInput' />
       <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" className='createdByInput' />
-      <div className="areTheyLive"><strong>Are they live: </strong> { liveStatusValue }</div>
+      <div className="areTheyLive"><strong>Are they live: </strong> { liveStatusValue === 'false probably idk search for someone you nitwit' ? 'false probably idk search for someone you nitwit' : liveStatusValue === 'true' ? 'Yas' : 'No bitch' }</div>
       <button
         className={ 'button' }
         onClick={ () => {
@@ -74,18 +74,18 @@ function App() {
       <div className='iframeGrid'>
         { !!listOfClips.length && listOfClips.map(clip =>
           <div className="iframeContainer" key={ clip.id }>
-            { clip.title }
+            <div className='title'>
+              { clip.title }
+            </div>
             <iframe
               src={ clip.embedUrl }
-              height="600px"
-              width="100%"
               frameBorder="<frameborder>"
               scrolling="<scrolling>"
               title="Iframe1"
               className='iframe'
             />
           </div>
-        )}
+        ) }
       </div>
     </div>
   );
