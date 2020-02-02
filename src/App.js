@@ -80,7 +80,7 @@ function App() {
         </div>
         <div className="nameAndStatusContainer">
 
-        <h1>{streamerNameDisplay || 'Search for a streamer plez'}</h1>
+        <h1>{streamerNameDisplay || '...'}</h1>
         <img className="liveStatus" src={streamerNameDisplay ? (liveStatusValue ? online : offline) : greyCircle } alt="liveStatus" />
         </div>
       <div className='iframeGrid'>
