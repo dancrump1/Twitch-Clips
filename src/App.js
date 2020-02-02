@@ -10,7 +10,7 @@ function App() {
 
   const [streamerValue, setStreamerValue] = useState("");
   const [gameValue, setGameValue] = useState("");
-  const [liveStatusValue, setLiveStatusValue] = useState("false probably idk search for someone you nitwit");
+  const [liveStatusValue, setLiveStatusValue] = useState("No probably idk search for someone you nitwit");
   const [startDateValue, setStartDateValue] = useState("");
   const [endDateValue, setEndDateValue] = useState("");
   const [createdByValue, setCreatedByValue] = useState("");
@@ -41,12 +41,12 @@ function App() {
 
   return (
     <div className={ 'searchContainer' }>
-      <input type='text' value={ streamerValue } onChange={ event => setStreamerValue(event.target.value) } placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
+      <input type='text' value={ streamerValue } onChange={ event => {setStreamerValue(event.target.value); setLiveStatusValue('No probably idk search for someone you nitwit') }} placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
       <input type='date' onChange={ event => setStartDateValue(event.target.value) } className='startDate' />
       <input type='date' onChange={ event => setEndDateValue(event.target.value) } className='endDate' />
       <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" className='gameInput' />
       <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" className='createdByInput' />
-      <div className="areTheyLive"><strong>Are they live: </strong> { liveStatusValue === 'false probably idk search for someone you nitwit' ? 'false probably idk search for someone you nitwit' : liveStatusValue === 'true' ? 'Yas' : 'No bitch' }</div>
+      <div className="areTheyLive"><strong>Are they live: </strong> { liveStatusValue === 'No probably idk search for someone you nitwit' ? 'No probably idk search for someone you nitwit' : liveStatusValue === 'true' ? 'Yas' : 'No bitch' }</div>
       <button
         className={ 'button' }
         onClick={ () => {
@@ -54,7 +54,7 @@ function App() {
           isStreamLive().then(data => setLiveStatusValue(data.toString()));
           fetchGameId().then(gameId => {
             fetchClipLibrary().then(data => {
-              const filteredClips = data.data.filter(clip => {
+              const filteredClips = data?.data?.filter(clip => {
                 if (createdByValue && gameId) {
                   return clip.gameId.toString() === gameId.id.toString() && clip.createdBy === createdByValue;
                 } else if (!createdByValue && gameId) {
@@ -72,13 +72,13 @@ function App() {
         } }
       >search</button>
       <div className='iframeGrid'>
-        { !!listOfClips.length && listOfClips.map(clip =>
+        { !!listOfClips?.length && listOfClips.map(clip =>
           <div className="iframeContainer" key={ clip.id }>
             <div className='title'>
               { clip.title }
             </div>
             <iframe
-              src={ clip.embedUrl }
+              src={ clip.embedUrl + '&autoplay=false'  }
               frameBorder="<frameborder>"
               scrolling="<scrolling>"
               title="Iframe1"
@@ -86,6 +86,7 @@ function App() {
             />
           </div>
         ) }
+        {!listOfClips?.length && <h1 className='searchMessage'>Search for a Streamer's clips</h1>}
       </div>
     </div>
   );
