@@ -13,6 +13,7 @@ function App() {
   const [liveStatusValue, setLiveStatusValue] = useState("false probably idk search for someone you nitwit");
   const [startDateValue, setStartDateValue] = useState("");
   const [endDateValue, setEndDateValue] = useState("");
+  const [createdByValue, setCreatedByValue] = useState("");
   const [listOfClips, setListOfClips] = useState([]);
 
   async function isStreamLive() {
@@ -43,7 +44,8 @@ function App() {
       <input type='text' value={ streamerValue } onChange={ event => setStreamerValue(event.target.value) } placeholder="Type here to search for a streamer's clips" />
       <input type='date' onChange={ event => setStartDateValue(event.target.value) } />
       <input type='date' onChange={ event => setEndDateValue(event.target.value) } />
-      <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Type here to search for a streamer's clips" />
+      <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" />
+      <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" />
       <div><strong>Are they live: </strong> { liveStatusValue }</div>
       <button
         className={ 'button' }
@@ -52,10 +54,21 @@ function App() {
           isStreamLive().then(data => setLiveStatusValue(data.toString()));
           fetchGameId().then(gameId => {
             fetchClipLibrary().then(data => {
-              const filteredClips = data.data.filter(clip => gameId ? clip.gameId.toString() === gameId.id.toString() : clip);
-              setListOfClips(filteredClips)
+              const filteredClips = data.data.filter(clip => {
+                if (createdByValue && gameId) {
+                  return clip.gameId.toString() === gameId.id.toString() && clip.createdBy === createdByValue;
+                } else if (!createdByValue && gameId) {
+                  return clip.gameId.toString() === gameId.id.toString();
+                } else if (!gameId && createdByValue) {
+                 return clip.creatorDisplayName === createdByValue;
+                } else {
+                  return clip;
+                }
+              });
+              console.log(filteredClips)
+              return setListOfClips(filteredClips)
             });
-          });
+          })
         } }
       >search</button>
       { !!listOfClips.length && listOfClips.map(clip => <div key={ clip.id }>{ clip.title }
