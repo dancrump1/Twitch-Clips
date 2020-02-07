@@ -20,6 +20,7 @@ function App() {
   const [endDateValue, setEndDateValue] = useState("");
   const [createdByValue, setCreatedByValue] = useState("");
   const [listOfClips, setListOfClips] = useState([]);
+  const [numberOfResults, setNumberOfResults] = useState(100);
 
   async function isStreamLive() {
     const user = await twitchClient.helix.users.getUserByName(streamerValue);
@@ -34,7 +35,7 @@ function App() {
     if (!user) {
       return false;
     }
-    const clips = await twitchClient.helix.clips.getClipsForBroadcaster(user.id, { endDate: endDateValue ? moment(endDateValue).format() : undefined, startDate: startDateValue ? moment(startDateValue).format() : undefined, limit: "20" });
+    const clips = await twitchClient.helix.clips.getClipsForBroadcaster(user.id, { endDate: endDateValue ? moment(endDateValue).format() : undefined, startDate: startDateValue ? moment(startDateValue).format() : undefined, limit: "100" });
     return clips;
   }
 
@@ -47,9 +48,12 @@ function App() {
   return (
     <div className='searchContainer' >
       <div>
-      <input type='text' value={ streamerValue } onChange={ event => {setStreamerValue(event.target.value); setstreamerNameDisplay(''); setLiveStatusValue('No probably idk search for someone you nitwit') }} placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
+        <p>Use these to find {numberOfResults} results for {streamerValue || 'Fckin nobdy'} between {startDateValue || 'the beginning of time'} - {endDateValue || 'the end of time'}</p>
+      <input type='text' value={streamerValue} onChange={ event => {setStreamerValue(event.target.value); setstreamerNameDisplay(''); setLiveStatusValue('No probably idk search for someone you nitwit') }} placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
       <input type='date' onChange={ event => setStartDateValue(event.target.value) } className='startDate' />
       <input type='date' onChange={ event => setEndDateValue(event.target.value) } className='endDate' />
+      <input type='text' value={numberOfResults} onChange={event => setNumberOfResults(event.target.value)} />
+      <p>User these to filter the list of 100 results</p>
       <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" className='gameInput' />
       <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" className='createdByInput' />
       <button
