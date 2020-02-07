@@ -1,15 +1,15 @@
 .searchContainer{
     display: flex;
     flex-direction: column;
+    padding-left: 15px;
     > :nth-child(2) {
-        padding-top: 50px;
+        padding-top: 15px;
         align-self: center;
     }
 }
 
 .streamerNameInput{
-    margin: 15px;
-}
+margin: 15px 15px 15px 0}
 
 .startDate{
     margin-right: 15px;
@@ -45,10 +45,6 @@ margin-right: 15px;
     padding-left: 5px;
 }
 
-
-.button {
-margin-left: 15px;
-}
 
 .iframeGrid{
     display: flex;
@@ -87,5 +83,5 @@ width: 100%;
 
 .twitchGif{
     width: 50%;
-
+    padding-bottom: 30px;
 }
