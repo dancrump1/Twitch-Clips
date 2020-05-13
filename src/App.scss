@@ -1,4 +1,7 @@
-.searchContainer{
+.pageContainer{
+ padding: 15px;
+    
+    .searchContainer{
     display: flex;
     flex-direction: column;
     padding-left: 15px;
@@ -9,20 +12,20 @@
 }
 
 .streamerNameInput{
-margin: 15px 15px 15px 0}
-
-.startDate{
+    margin: 15px 15px 15px 0}
+    
+    .startDate{
     margin-right: 15px;
 }
 
 .endDate{
-
+    
     margin-right: 15px;
 }
 
 .gameInput{
-margin-right: 15px;
-
+    margin-right: 15px;
+    
 }
 
 .createdByInput{
@@ -61,11 +64,11 @@ padding: 15px;
 }
 
 .title {
-height: 21px;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
-padding-bottom: 15px;
+    height: 21px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-bottom: 15px;
 }
 
 .iframe{
@@ -84,4 +87,5 @@ width: 100%;
 .twitchGif{
     width: 50%;
     padding-bottom: 30px;
+}
 }

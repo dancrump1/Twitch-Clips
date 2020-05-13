@@ -6,6 +6,7 @@ import online from './images/online.png'
 import offline from './images/offline.png'
 import greyCircle from './images/greyCircle.png'
 import './App.scss';
+import { SearchBar } from './components';
 
 function App() {
   const clientId = '21w5wlsrs2z97lckvfraznvflm33m3';
@@ -15,12 +16,12 @@ function App() {
   const [streamerValue, setStreamerValue] = useState("");
   const [gameValue, setGameValue] = useState("");
   const [streamerNameDisplay, setstreamerNameDisplay] = useState("");
-  const [liveStatusValue, setLiveStatusValue] = useState("No probably idk search for someone you nitwit");
+  const [liveStatusValue, setLiveStatusValue] = useState(false);
   const [startDateValue, setStartDateValue] = useState("");
   const [endDateValue, setEndDateValue] = useState("");
   const [createdByValue, setCreatedByValue] = useState("");
   const [listOfClips, setListOfClips] = useState([]);
-  const [numberOfResults, setNumberOfResults] = useState(100);
+  const [numberOfResults, setNumberOfResults] = useState(25);
 
   async function isStreamLive() {
     const user = await twitchClient.helix.users.getUserByName(streamerValue);
@@ -46,14 +47,13 @@ function App() {
 
 
   return (
-    <div className='searchContainer' >
-      <div>
-        <p>Use these to find {numberOfResults} results for {streamerValue || 'Fckin nobdy'} between {startDateValue || 'the beginning of time'} - {endDateValue || 'the end of time'}</p>
-      <input type='text' value={streamerValue} onChange={ event => {setStreamerValue(event.target.value); setstreamerNameDisplay(''); setLiveStatusValue('No probably idk search for someone you nitwit') }} placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
+    <div className='pageContainer'>
+       <div>
+      <input type='text' value={streamerValue} onChange={ event => {setStreamerValue(event.target.value); setstreamerNameDisplay(''); setLiveStatusValue(false) }} placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
       <input type='date' onChange={ event => setStartDateValue(event.target.value) } className='startDate' />
       <input type='date' onChange={ event => setEndDateValue(event.target.value) } className='endDate' />
       <input type='text' value={numberOfResults} onChange={event => setNumberOfResults(event.target.value)} />
-      <p>User these to filter the list of 100 results</p>
+      <p>User these to filter the list of 25 results</p>
       <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" className='gameInput' />
       <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" className='createdByInput' />
       <button
@@ -84,8 +84,7 @@ function App() {
         </div>
         <div className="nameAndStatusContainer">
 
-        <h1>{streamerNameDisplay || '...'}</h1>
-        <img className="liveStatus" src={streamerNameDisplay ? (liveStatusValue ? online : offline) : greyCircle } alt="liveStatus" />
+        <h1>{`${streamerNameDisplay || 'Type to search'} ${liveStatusValue ? "online" : "offline"}`  || 'Search from a user...'}</h1>
         </div>
       <div className='iframeGrid'>
         { !!listOfClips?.length && listOfClips.map(clip =>
@@ -102,14 +101,14 @@ function App() {
             />
           </div>
         ) }
-        {!listOfClips?.length && 
+        {/* {!listOfClips?.length && 
         <>
         <h1 className='searchMessage'>
           Search for a Streamer's clips
         </h1>
         <img src={twitchGif} alt="twitch" className='twitchGif' />
         </>
-        }
+        } */}
       </div>
     </div>
   );
