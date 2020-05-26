@@ -1,91 +1,45 @@
+@import "node_modules/react-image-gallery/styles/scss/image-gallery.scss";
+
 .pageContainer{
- padding: 15px;
-    
-    .searchContainer{
     display: flex;
-    flex-direction: column;
-    padding-left: 15px;
-    > :nth-child(2) {
-        padding-top: 15px;
-        align-self: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: #9d6de6;
+    
+    
+    .filterContainer{
+        display: flex;
+        flex-direction: column;
+        min-width: 300px;
+        background-color: #9146ff;
+        justify-items: center;
+
+         > * {
+            margin: 15px;
+        }
+
+
+    
+        .button {
+            margin: 15px;
+        }
     }
-}
 
-.streamerNameInput{
-    margin: 15px 15px 15px 0}
-    
-    .startDate{
-    margin-right: 15px;
-}
 
-.endDate{
-    
-    margin-right: 15px;
-}
 
-.gameInput{
-    margin-right: 15px;
-    
-}
 
-.createdByInput{
-    
-    margin-right: 15px;
-}
 
-.nameAndStatusContainer {
-    display: flex;
-    align-items: center;
-}
+.galleryContainer{ 
+margin: auto;
 
-.areTheyLive {
-    padding: 0 0 15px 15px;
-}
+.iframe {
+    height: 720px;
+    width: 1280px;
 
-.liveStatus {
-    width: 30px;
-    height: 20px;
-    padding-left: 5px;
+}
 }
 
 
-.iframeGrid{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
 
-.iframeContainer{ 
-width: 445px;
-display: flex;
-flex-shrink: 0;
-flex-direction: column;
-padding: 15px;
-}
 
-.title {
-    height: 21px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    padding-bottom: 15px;
-}
-
-.iframe{
-height: 200px;
-width: 100%;
-}
-
-.searchMessage {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    text-align: center;
-}
-
-.twitchGif{
-    width: 50%;
-    padding-bottom: 30px;
-}
 }
