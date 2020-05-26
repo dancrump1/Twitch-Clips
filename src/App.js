@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import TwitchClient from 'twitch';
 import moment from 'moment';
-import twitchGif from './images/twitch_logo_animation.gif'
-import online from './images/online.png'
-import offline from './images/offline.png'
-import greyCircle from './images/greyCircle.png'
+import ImageGallery from 'react-image-gallery';
+
 import './App.scss';
-import { SearchBar } from './components';
 
 function App() {
   const clientId = '21w5wlsrs2z97lckvfraznvflm33m3';
@@ -21,7 +18,7 @@ function App() {
   const [endDateValue, setEndDateValue] = useState("");
   const [createdByValue, setCreatedByValue] = useState("");
   const [listOfClips, setListOfClips] = useState([]);
-  const [numberOfResults, setNumberOfResults] = useState(25);
+  const [numberOfResults, setNumberOfResults] = useState(5);
 
   async function isStreamLive() {
     const user = await twitchClient.helix.users.getUserByName(streamerValue);
@@ -36,7 +33,11 @@ function App() {
     if (!user) {
       return false;
     }
-    const clips = await twitchClient.helix.clips.getClipsForBroadcaster(user.id, { endDate: endDateValue ? moment(endDateValue).format() : undefined, startDate: startDateValue ? moment(startDateValue).format() : undefined, limit: "100" });
+    const clips = await twitchClient.helix.clips.getClipsForBroadcaster(user.id, 
+      { endDate: endDateValue ? moment(endDateValue).format() : undefined,
+         startDate: startDateValue ? moment(startDateValue).format() : undefined,
+          limit: createdByValue ? 100 : numberOfResults,
+         });
     return clips;
   }
 
@@ -45,24 +46,40 @@ function App() {
     return gameId;
   }
 
+  const renderVideo = clip => {
+    return (
+      <div >
+ <iframe
+                  src={clip.embedUrl}
+                  frameBorder='0'
+                  allowFullScreen
+                  title={clip.title}
+                  className='iframe'
+                />
+      </div>
+    )
+  }
+
 
   return (
     <div className='pageContainer'>
-       <div>
-      <input type='text' value={streamerValue} onChange={ event => {setStreamerValue(event.target.value); setstreamerNameDisplay(''); setLiveStatusValue(false) }} placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
-      <input type='date' onChange={ event => setStartDateValue(event.target.value) } className='startDate' />
-      <input type='date' onChange={ event => setEndDateValue(event.target.value) } className='endDate' />
-      <input type='text' value={numberOfResults} onChange={event => setNumberOfResults(event.target.value)} />
-      <p>User these to filter the list of 25 results</p>
-      <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" className='gameInput' />
-      <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" className='createdByInput' />
-      <button
-        className={ 'button' }
-        onClick={ () => {
-          console.log('coming soon chat, relax');
-          setstreamerNameDisplay(streamerValue);
-          isStreamLive().then(data => setLiveStatusValue(data));
-          fetchGameId().then(gameId => {
+      <form className='filterContainer'>
+        <input type='text' value={streamerValue} onChange={ event => {setStreamerValue(event.target.value); setstreamerNameDisplay(''); setLiveStatusValue(false) }} placeholder="Type here to search for a streamer's clips" className='streamerNameInput' />
+        <input type='date' onChange={ event => setStartDateValue(event.target.value) } className='startDate' />
+        <input type='date' onChange={ event => setEndDateValue(event.target.value) } className='endDate' />
+        <input type='text' value={ gameValue } onChange={ event => setGameValue(event.target.value) } placeholder="Filter by game" className='gameInput' />
+        <input type='text' value={ createdByValue } onChange={ event => setCreatedByValue(event.target.value) } placeholder="Created By" className='createdByInput' />
+        <p>Increasing this will cause some lag</p>
+        <input type='text' value={numberOfResults} onChange={event => setNumberOfResults(event.target.value)} />   
+        <button
+          className='button' 
+          type='submit'
+          onClick={ (e) => {
+            e.preventDefault();
+            console.log('coming soon chat, relax');
+            isStreamLive().then(data => setLiveStatusValue(data));
+         
+            fetchGameId().then(gameId => {
             fetchClipLibrary().then(data => {
               const filteredClips = data?.data?.filter(clip => {
                 if (createdByValue && gameId) {
@@ -76,40 +93,20 @@ function App() {
                 }
               });
               console.log(filteredClips)
-              return setListOfClips(filteredClips)
+              const mungedClips = filteredClips.map(clip => ({thumbnail: clip.thumbnailUrl, original: clip.url, embedUrl: clip.embedUrl, description: clip.title , renderItem: () => renderVideo(clip)}))
+              return setListOfClips(mungedClips)
+            })
             });
-          })
+            
         } }
-        >search</button>
-        </div>
-        <div className="nameAndStatusContainer">
-
-        <h1>{`${streamerNameDisplay || 'Type to search'} ${liveStatusValue ? "online" : "offline"}`  || 'Search from a user...'}</h1>
-        </div>
-      <div className='iframeGrid'>
-        { !!listOfClips?.length && listOfClips.map(clip =>
-          <div className="iframeContainer" key={ clip.id }>
-            <div className='title'>
-              { clip.title }
-            </div>
-            <iframe
-              src={ clip.embedUrl + '&autoplay=false'  }
-              frameBorder="<frameborder>"
-              scrolling="<scrolling>"
-              title="Iframe1"
-              className='iframe'
-            />
-          </div>
-        ) }
-        {/* {!listOfClips?.length && 
-        <>
-        <h1 className='searchMessage'>
-          Search for a Streamer's clips
-        </h1>
-        <img src={twitchGif} alt="twitch" className='twitchGif' />
-        </>
-        } */}
-      </div>
+        >
+          search
+        </button>
+        </form>
+        
+      <section className='galleryContainer'>       
+          <ImageGallery showFullscreenButton={false} showPlayButton={false} items={listOfClips} />
+      </section>
     </div>
   );
 }
